@@ -105,3 +105,18 @@ def downloadData():
 def download_save_to_DataBase():
     importData = downloadData()
     saveToDataBase(importData)
+
+def get_city_name():
+    conn = create_connection('pm25.db')
+    print("資料庫連線成功")
+
+    sql = ''' 
+        SELECT DISTINCT county
+        FROM pm25
+        '''
+    with conn:
+        cursor = conn.cursor()
+        cursor.execute(sql)
+        rows = cursor.fetchall()
+        city_name_list = [row[0] for row in rows]
+        return  city_name_list
