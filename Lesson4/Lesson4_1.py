@@ -22,6 +22,12 @@ def create_connection(db_file):
 
     return conn
 
+def delete_table_pm25(conn):
+    sql = 'DROP TABLE pm25;'
+    cursor = conn.cursor()
+    cursor.execute(sql)
+    conn.commit()
+
 def create_table_pm25(conn):
     sql = '''
     CREATE TABLE IF NOT EXISTS pm25 (
@@ -35,6 +41,16 @@ def create_table_pm25(conn):
     '''
     cursor = conn.cursor()
     cursor.execute(sql)
+    conn.commit()
+
+def select_pm25(conn):
+    sql = '''
+    SELECT * FROM pm25 WHERE id = 1
+    '''
+    cursor = conn.cursor()
+    cursor.execute(sql)
+    data = cursor.fetchall()
+    return data
 
 def insert_pm25(conn, values):
     """
@@ -60,9 +76,14 @@ def saveToDataBase(datas):
     conn = create_connection('pm25.db')
     print("資料庫連線成功")
     with conn:
+        if datas[0][3] == select_pm25(conn)[0][4]:
+            print("資料已是最新資料")
+            return
+        delete_table_pm25(conn)
         create_table_pm25(conn)
         for item in datas:
             insert_pm25(conn,item)
+        print("資料已更新")
 
 
 def downloadData():
