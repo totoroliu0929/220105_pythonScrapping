@@ -102,9 +102,6 @@ def downloadData():
             item in datas]
         return importData
 
-def main():
+def download_save_to_DataBase():
     importData = downloadData()
     saveToDataBase(importData)
-
-if __name__ == '__main__':
-    main()
