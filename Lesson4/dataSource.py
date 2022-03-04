@@ -152,3 +152,42 @@ def get_site_info(site):
     cursor.execute(sql, site)
     rows = cursor.fetchone()
     return {'id':rows[0], '站點':rows[1], '城市':rows[2], 'pm25':rows[3], '日期':rows[4], '單位':rows[5]}
+
+def get_better():
+    conn = create_connection('pm25.db')
+    print("資料庫連線成功")
+    sql = '''
+        SELECT  *
+        FROM pm25
+        WHERE pm25 <= 35
+        '''
+    cursor = conn.cursor()
+    cursor.execute(sql)
+    rows = cursor.fetchall()
+    return rows
+
+def get_normal():
+    conn = create_connection('pm25.db')
+    print("資料庫連線成功")
+    sql = '''
+        SELECT  *
+        FROM pm25
+        WHERE pm25 BETWEEN 35 AND 53
+        '''
+    cursor = conn.cursor()
+    cursor.execute(sql)
+    rows = cursor.fetchall()
+    return rows
+
+def get_bad():
+    conn = create_connection('pm25.db')
+    print("資料庫連線成功")
+    sql = '''
+            SELECT  *
+            FROM pm25
+            WHERE pm25 > 53
+            '''
+    cursor = conn.cursor()
+    cursor.execute(sql)
+    rows = cursor.fetchall()
+    return rows

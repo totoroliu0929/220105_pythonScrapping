@@ -29,21 +29,29 @@ class Window(tk.Tk):
         left_top_frame.pack()
         # 左上邊容器=================end
         # button_frame============start
+        def rowsList(records):
+            for i in self.tree.get_children():
+                self.tree.delete(i)
+            for record in records:
+                self.tree.insert('', tk.END, values=record)
+
         def betterClick():
-            print("better")
+            records = dataSource.get_better()
+            rowsList(records)
         button_frame = tk.Frame(left_label_frame)
         betterButton = tk.Button(button_frame,text="空氣較佳品質",command=betterClick)
         betterButton.pack(side=tk.LEFT)
 
         def normalClick():
-            print("normal")
+            records = dataSource.get_normal()
+            rowsList(records)
         normalButton = tk.Button(button_frame, text="空氣一般品質",command=normalClick)
         normalButton.pack(side=tk.LEFT)
 
 
         def badClick():
-            print("bad")
-
+            records = dataSource.get_bad()
+            rowsList(records)
         badButton = tk.Button(button_frame, text="空氣品質不佳",command=badClick)
         badButton.pack(side=tk.LEFT)
         button_frame.pack(pady=20)
