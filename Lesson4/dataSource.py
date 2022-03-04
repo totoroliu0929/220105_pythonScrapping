@@ -4,7 +4,7 @@ import requests
 import sqlite3
 from sqlite3 import Error
 
-urlpath = '	https://data.epa.gov.tw/api/v1/aqx_p_02?limit=1000&api_key=9be7b239-557b-4c10-9775-78cadfc555e9&sort=ImportDate%20desc&format=json'
+urlpath = 'https://data.epa.gov.tw/api/v1/aqx_p_02?limit=1000&api_key=9be7b239-557b-4c10-9775-78cadfc555e9&sort=ImportDate%20desc&format=json'
 
 def create_connection(db_file):
     """
@@ -137,3 +137,18 @@ def get_site_pm25(county):
         rows = cursor.fetchall()
         data_list = [list(row) for row in rows]
         return data_list
+
+def get_site_info(site):
+    conn = create_connection('pm25.db')
+    print("資料庫連線成功")
+    sql = '''
+        SELECT  *
+        FROM pm25
+        WHERE site=? AND pm25=?
+        LIMIT 1
+        '''
+    cursor = conn.cursor()
+    #cursor.execute(sql, (site[0],))
+    cursor.execute(sql, site)
+    rows = cursor.fetchone()
+    return {'id':rows[0], '站點':rows[1], '城市':rows[2], 'pm25':rows[3], '日期':rows[4], '單位':rows[5]}

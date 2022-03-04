@@ -12,8 +12,9 @@ class Window(tk.Tk):
         titleLabel = ttk.Label(self, text="台灣即時PM2.5",font=title_Font,anchor=tk.CENTER)
         titleLabel.pack(fill=tk.X, pady=20)
 
+        top_frame = tk.Frame(self)
         #左邊容器==================start
-        left_label_frame = tk.LabelFrame(self,text="左邊容器",background="red")
+        left_label_frame = tk.LabelFrame(top_frame,text="左邊容器",background="red")
         cityLabel = ttk.Label(left_label_frame, text="城市:")
         cityLabel.pack(side=tk.LEFT,padx=(50,0))
 
@@ -27,7 +28,7 @@ class Window(tk.Tk):
         #左邊容器==================end
 
         #右邊容器==================start
-        right_label_frame = tk.LabelFrame(self, text="右邊容器",bg='blue')
+        right_label_frame = tk.LabelFrame(top_frame, text="右邊容器",bg='blue')
         siteLabel = ttk.Label(right_label_frame, text="站點:")
         siteLabel.pack(side=tk.LEFT, padx=(50, 0), anchor=tk.N)
 
@@ -37,7 +38,24 @@ class Window(tk.Tk):
         site_listbox.bind("<<ListboxSelect>>", self.site_selected)
         right_label_frame.pack(side=tk.RIGHT)
         # 右邊容器==================end
-        print(cities)
+        top_frame.pack()
+
+        # 下方容器===================start
+        self.tree = ttk.Treeview(self, columns=('id', 'site', 'city', 'pm25', 'date', 'unit'), show='headings')
+        self.tree.heading('id', text="編號")
+        self.tree.heading('site', text="站點")
+        self.tree.heading('city', text="城市")
+        self.tree.heading('pm25', text="pm25")
+        self.tree.heading('date', text="日期")
+        self.tree.heading('unit', text="單位")
+        self.tree.column('id', width=100)
+        self.tree.column('site', width=100)
+        self.tree.column('city', width=100)
+        self.tree.column('pm25', width=100)
+        self.tree.column('date', width=100)
+        self.tree.column('unit', width=100)
+        self.tree.pack(side=tk.TOP)
+        # 下方容器===================end
 
     def city_selected(self, event):
         print(self.cityvar.get())
@@ -50,7 +68,10 @@ class Window(tk.Tk):
         if not selectedIndex:
             return
         site = event.widget.get(selectedIndex)
-        print(site)
+        for item in self.tree.get_children():
+            self.tree.delete(item)
+        siteInfo = dataSource.get_site_info(site)
+        self.tree.insert('',tk.END,values=list(siteInfo.values()))
 
 
 if __name__ == "__main__":
