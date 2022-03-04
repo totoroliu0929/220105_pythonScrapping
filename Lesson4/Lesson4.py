@@ -58,7 +58,8 @@ class Window(tk.Tk):
         # 下方容器===================end
 
     def city_selected(self, event):
-        print(self.cityvar.get())
+        for item in self.tree.get_children():
+            self.tree.delete(item)
         data_list = dataSource.get_site_pm25(self.cityvar.get())
         self.choicesvar.set(data_list)
 
@@ -68,8 +69,8 @@ class Window(tk.Tk):
         if not selectedIndex:
             return
         site = event.widget.get(selectedIndex)
-        for item in self.tree.get_children():
-            self.tree.delete(item)
+        #for item in self.tree.get_children():
+        #    self.tree.delete(item)
         siteInfo = dataSource.get_site_info(site)
         self.tree.insert('',tk.END,values=list(siteInfo.values()))
 
