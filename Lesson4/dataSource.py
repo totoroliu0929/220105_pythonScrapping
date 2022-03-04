@@ -120,3 +120,20 @@ def get_city_name():
         rows = cursor.fetchall()
         city_name_list = [row[0] for row in rows]
         return  city_name_list
+
+def get_site_pm25(county):
+    conn = create_connection('pm25.db')
+    print("資料庫連線成功")
+
+    sql = f''' 
+            SELECT DISTINCT site, pm25
+            FROM pm25
+            WHERE county = "{county}"
+            '''
+
+    with conn:
+        cursor = conn.cursor()
+        cursor.execute(sql)
+        rows = cursor.fetchall()
+        data_list = [list(row) for row in rows]
+        return data_list

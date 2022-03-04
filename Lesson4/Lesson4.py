@@ -7,25 +7,50 @@ class Window(tk.Tk):
     def __init__(self,cities):
         super().__init__()
         #title_Font = font.nametofont('TkCaptionFont')
+        self.configure(background='white')
         title_Font = font.Font(family='Helvetica', size=20, weight='bold')
         titleLabel = ttk.Label(self, text="台灣即時PM2.5",font=title_Font,anchor=tk.CENTER)
         titleLabel.pack(fill=tk.X, pady=20)
 
-        cityLabel = ttk.Label(self, text="城市:")
+        #左邊容器==================start
+        left_label_frame = tk.LabelFrame(self,text="左邊容器",background="red")
+        cityLabel = ttk.Label(left_label_frame, text="城市:")
         cityLabel.pack(side=tk.LEFT,padx=(50,0))
 
-        cityvar = tk.StringVar()
-        city_combobox = ttk.Combobox(self, textvariable=cityvar)
+        self.cityvar = tk.StringVar()
+        city_combobox = ttk.Combobox(left_label_frame, textvariable=self.cityvar)
         city_combobox.pack(side=tk.LEFT)
         city_combobox['values'] = cities
         city_combobox.state(["readonly"])
+        city_combobox.bind('<<ComboboxSelected>>', self.city_selected)
+        left_label_frame.pack(side=tk.LEFT, anchor=tk.N)
+        #左邊容器==================end
 
-        siteLabel = ttk.Label(self, text="站點:")
-        siteLabel.pack(side=tk.LEFT, padx=(50, 0))
+        #右邊容器==================start
+        right_label_frame = tk.LabelFrame(self, text="右邊容器",bg='blue')
+        siteLabel = ttk.Label(right_label_frame, text="站點:")
+        siteLabel.pack(side=tk.LEFT, padx=(50, 0), anchor=tk.N)
 
-        site_listbox = tk.Listbox(self, height=10)
+        self.choicesvar = tk.StringVar(value=[])
+        site_listbox = tk.Listbox(right_label_frame, height=10, listvariable=self.choicesvar)
         site_listbox.pack(side=tk.LEFT,padx=(0,50),pady=(0,30))
+        site_listbox.bind("<<ListboxSelect>>", self.site_selected)
+        right_label_frame.pack(side=tk.RIGHT)
+        # 右邊容器==================end
         print(cities)
+
+    def city_selected(self, event):
+        print(self.cityvar.get())
+        data_list = dataSource.get_site_pm25(self.cityvar.get())
+        self.choicesvar.set(data_list)
+
+    #listboxbind事件
+    def site_selected(self,event):
+        selectedIndex = event.widget.curselection()
+        if not selectedIndex:
+            return
+        site = event.widget.get(selectedIndex)
+        print(site)
 
 
 if __name__ == "__main__":
