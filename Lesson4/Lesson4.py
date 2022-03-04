@@ -15,15 +15,39 @@ class Window(tk.Tk):
         top_frame = tk.Frame(self)
         #左邊容器==================start
         left_label_frame = tk.LabelFrame(top_frame,text="左邊容器",background="red")
-        cityLabel = ttk.Label(left_label_frame, text="城市:")
+        # 左上邊容器==================start
+        left_top_frame = tk.Frame(left_label_frame)
+        cityLabel = ttk.Label(left_top_frame, text="城市:")
         cityLabel.pack(side=tk.LEFT,padx=(50,0))
 
         self.cityvar = tk.StringVar()
-        city_combobox = ttk.Combobox(left_label_frame, textvariable=self.cityvar)
-        city_combobox.pack(side=tk.LEFT)
+        city_combobox = ttk.Combobox(left_top_frame, textvariable=self.cityvar)
+        city_combobox.pack()
         city_combobox['values'] = cities
         city_combobox.state(["readonly"])
         city_combobox.bind('<<ComboboxSelected>>', self.city_selected)
+        left_top_frame.pack()
+        # 左上邊容器=================end
+        # button_frame============start
+        def betterClick():
+            print("better")
+        button_frame = tk.Frame(left_label_frame)
+        betterButton = tk.Button(button_frame,text="空氣較佳品質",command=betterClick)
+        betterButton.pack(side=tk.LEFT)
+
+        def normalClick():
+            print("normal")
+        normalButton = tk.Button(button_frame, text="空氣一般品質",command=normalClick)
+        normalButton.pack(side=tk.LEFT)
+
+
+        def badClick():
+            print("bad")
+
+        badButton = tk.Button(button_frame, text="空氣品質不佳",command=badClick)
+        badButton.pack(side=tk.LEFT)
+        button_frame.pack(pady=20)
+        # button_frame============end
         left_label_frame.pack(side=tk.LEFT, anchor=tk.N)
         #左邊容器==================end
 
