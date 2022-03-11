@@ -3,7 +3,9 @@ from requests import ConnectionError,HTTPError,Timeout
 import sqlite3
 from sqlite3 import Error as sqlite3Error
 
-__all__ = ['update_youbike_data']
+databasName = 'youbike.db'
+
+__all__ = ['update_youbike_data','get_count_of_normal','get_list_of_normal']
 
 def download_youbike_data():
     youbikeurl = "https://tcgbusfs.blob.core.windows.net/blobyoubike/YouBikeTP.json"
@@ -99,24 +101,43 @@ def replace_youbike_data(conn,dataList):
     conn.commit()
 
 
-
-
-
 def update_youbike_data():
     datalist = download_youbike_data()
-    conn = create_connection('youbike.db')
+    conn = create_connection(databasName)
     with conn:
         create_youbike_table(conn)
         replace_youbike_data(conn,datalist)
 
-'''
-SELECT sno as 站點編號,sna as 站點名稱,tot as 總容量,sbi as 可借,bemp as 可還,act as 狀態
-FROM youbike
-WHERE act = 1 AND sbi > 3 AND bemp >3
-'''
+def get_count_of_normal():
+    conn = create_connection(databasName )
+    sql = '''
+    SELECT count(*) as 正常數量
+    FROM youbike
+    WHERE act = 1 AND sbi > 3 AND bemp >3
+    '''
+    with conn:
+        cursor = conn.cursor()
+        try:
+            cursor.execute(sql)
+            row = cursor.fetchone()
+            print(row)
+        except sqlite3Error as e:
+            print(e)
+    return row[0]
 
-'''
-SELECT count(*) as 正常數量
-FROM youbike
-WHERE act = 1 AND sbi > 3 AND bemp >3
-'''
+def get_list_of_normal():
+    conn = create_connection(databasName)
+    sql = '''
+        SELECT sna,tot,sbi,bemp
+        FROM youbike
+        WHERE act = 1 AND sbi > 3 AND bemp >3
+        '''
+    with conn:
+        cursor = conn.cursor()
+        try:
+            cursor.execute(sql)
+            rows = cursor.fetchall()
+            print(rows)
+        except sqlite3Error as e:
+            print(e)
+    return rows
