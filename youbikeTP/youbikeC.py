@@ -12,7 +12,7 @@ class Window(tk.Tk):
         tk.Label(topFrame,text="台北市youbike即時監測系統",font=("arial",20)).pack()
         topFrame.grid(column=0,row=0,columnspan=3,padx=20,pady=20)
         #上方的Frame=========end
-        self.leftLabelFrame = LeftLabelFrame(self,text="左邊的")
+        self.leftLabelFrame = NewLabelFrame(self,text="左邊的",command="123")
         self.leftLabelFrame.grid(column=0,row=1,padx=20,pady=20)
 
         self.centerLabelFrame = CenterLabelFrame(self,text="中間的")
@@ -35,9 +35,15 @@ class Window(tk.Tk):
         self.centerLabelFrame.configure(text=nowString)
         self.after(60*1000,self.update_data)
 
-class LeftLabelFrame(tk.LabelFrame):
-    def __init__(self, *args , **kwargs):
-        super().__init__(*args, **kwargs)
+class Command():
+    def __init__(self,command):
+        self.command = command
+
+class NewLabelFrame(tk.LabelFrame, Command):
+    def __init__(self, command, *args , **kwargs):
+        tk.LabelFram.__init__(*args, **kwargs)
+        Command.__init__(command)
+        #print(self.command)
         topFrame = tk.Frame(self,background='gray')
         tk.Label(topFrame, text="正常租借站點", font=("arial", 20),background='gray',fg="white").pack(padx=10,pady=10)
         normal_count = dataSource.get_count_of_normal()
