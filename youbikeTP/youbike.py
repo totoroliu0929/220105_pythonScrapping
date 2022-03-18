@@ -15,8 +15,8 @@ class Window(tk.Tk):
         NewLabelFrame(self,text="右邊的",command="right").grid(column=2, row=1, padx=20, pady=20)
 
 class NewLabelFrame(tk.LabelFrame):
-    def __init__(self, command, *args, **kwargs ):
-        super().__init__(*args, **kwargs)
+    def __init__(self, command, *args, **kwargs):
+        super().__init__(command, *args, **kwargs)
         #commandList = {"left":"正常租借站點","conter":"將無車可借站點","right":"將無車可還站點"}
         print(command)
         topFrame = tk.Frame(self,background='gray')

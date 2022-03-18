@@ -101,12 +101,16 @@ def replace_youbike_data(conn,dataList):
     conn.commit()
 
 
+
+
+
 def update_youbike_data():
     datalist = download_youbike_data()
     conn = create_connection(databasName)
     with conn:
         create_youbike_table(conn)
         replace_youbike_data(conn,datalist)
+
 
 def get_count_of_normal():
     conn = create_connection(databasName )
@@ -131,6 +135,75 @@ def get_list_of_normal():
         SELECT sna,tot,sbi,bemp
         FROM youbike
         WHERE act = 1 AND sbi > 3 AND bemp >3
+        '''
+    with conn:
+        cursor = conn.cursor()
+        try:
+            cursor.execute(sql)
+            rows = cursor.fetchall()
+            print(rows)
+        except sqlite3Error as e:
+            print(e)
+    return rows
+
+
+def get_count_of_less_bike():
+    conn = create_connection(databasName )
+    sql = '''
+    SELECT count(*) as 正常數量
+    FROM youbike
+    WHERE act = 1 AND sbi <= 3 
+    '''
+    with conn:
+        cursor = conn.cursor()
+        try:
+            cursor.execute(sql)
+            row = cursor.fetchone()
+            print(row)
+        except sqlite3Error as e:
+            print(e)
+    return row[0]
+
+def get_list_of_less_bike():
+    conn = create_connection(databasName)
+    sql = '''
+        SELECT sna,tot,sbi,bemp
+        FROM youbike
+        WHERE act = 1 AND sbi <= 3 
+        '''
+    with conn:
+        cursor = conn.cursor()
+        try:
+            cursor.execute(sql)
+            rows = cursor.fetchall()
+            print(rows)
+        except sqlite3Error as e:
+            print(e)
+    return rows
+
+def get_count_of_less_back_space():
+    conn = create_connection(databasName )
+    sql = '''
+    SELECT count(*) as 正常數量
+    FROM youbike
+    WHERE act = 1 AND bemp <= 3 
+    '''
+    with conn:
+        cursor = conn.cursor()
+        try:
+            cursor.execute(sql)
+            row = cursor.fetchone()
+            print(row)
+        except sqlite3Error as e:
+            print(e)
+    return row[0]
+
+def get_list_of_less_back_space():
+    conn = create_connection(databasName)
+    sql = '''
+        SELECT sna,tot,sbi,bemp
+        FROM youbike
+        WHERE act = 1 AND bemp <= 3 
         '''
     with conn:
         cursor = conn.cursor()
